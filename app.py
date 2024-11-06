@@ -41,11 +41,11 @@ st.header("Unbranded Emails")
 
 for i in range(1, 5):
     st.subheader(f"Email #{i}")
-    subject_line = st.text_input(f"Subject Line #{i}", max_chars=65)
-    email_headline = st.text_input(f"Headline #{i}", max_chars=80)
-    email_body = st.text_area(f"Body Copy #{i} (350 characters max)", max_chars=350)
-    email_cta = st.text_input(f"CTA #{i}", max_chars=20)
-    email_cta_link = st.text_input(f"CTA Link #{i}", value="https://")
+    subject_line = st.text_input(f"Email #{i} - Subject Line", max_chars=65)
+    email_headline = st.text_input(f"Email #{i} - Headline", max_chars=80)
+    email_body = st.text_area(f"Email #{i} - Body Copy (350 characters max)", max_chars=350)
+    email_cta = st.text_input(f"Email #{i} - CTA", max_chars=20)
+    email_cta_link = st.text_input(f"Email #{i} - CTA Link", value="https://")
     st.write("---")
 
 # generate pdf
