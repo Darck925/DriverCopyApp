@@ -100,13 +100,13 @@ for i in range(1, 5):
     
     st.write("---")
 
-# generate pdf with table formatting to match template layout
+# generate pdf with landscape orientation, page break, and updated styling
 if st.button("Generate PDF", key="generate_pdf"):
     from reportlab.lib import colors
-    from reportlab.lib.units import inch
-    from reportlab.platypus import Table, TableStyle
+    from reportlab.lib.pagesizes import landscape, letter
+    from reportlab.platypus import Table, TableStyle, PageBreak
 
-    pdf = SimpleDocTemplate("Promo_Driver_Script.pdf", pagesize=letter)
+    pdf = SimpleDocTemplate("Promo_Driver_Script.pdf", pagesize=landscape(letter))
     elements = []
     styles = getSampleStyleSheet()
 
@@ -136,19 +136,22 @@ if st.button("Generate PDF", key="generate_pdf"):
         ])
 
     # create and style the text placements table
-    text_table = Table(text_table_data, colWidths=[1 * inch, 2 * inch, 2 * inch, 2 * inch, 1 * inch, 2 * inch])
+    text_table = Table(text_table_data, colWidths=[1 * inch, 2 * inch, 3 * inch, 2 * inch, 1 * inch, 2 * inch])
     text_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  # grey header background
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, 0), 10),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.white),  # white cell background
         ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
     ]))
 
     elements.append(text_table)
+
+    # add a page break before the email placements section
+    elements.append(PageBreak())
 
     # email placements table
     elements.append(Paragraph("Email Job Code", styles["Heading2"]))
@@ -173,13 +176,13 @@ if st.button("Generate PDF", key="generate_pdf"):
     # create and style the email placements table
     email_table = Table(email_table_data, colWidths=[1 * inch, 2 * inch, 3 * inch, 2 * inch, 1 * inch, 2 * inch])
     email_table.setStyle(TableStyle([
-        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  # grey header background
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
         ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, 0), 10),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
-        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.white),  # white cell background
         ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
     ]))
 
@@ -194,3 +197,4 @@ if st.button("Generate PDF", key="generate_pdf"):
         b64 = base64.b64encode(pdf_data).decode()
         href = f'<a href="data:application/octet-stream;base64,{b64}" download="Promo_Driver_Script.pdf">Download PDF</a>'
     st.markdown(href, unsafe_allow_html=True)
+
