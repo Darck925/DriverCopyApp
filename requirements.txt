@@ -2,3 +2,5 @@ fpdf
 
 streamlit-quill
 reportlab
+
+beautifulsoup4
