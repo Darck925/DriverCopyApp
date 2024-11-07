@@ -2,9 +2,10 @@ import streamlit as st
 from streamlit_quill import st_quill
 from fpdf import FPDF
 import base64
-from reportlab.platypus import SimpleDocTemplate, Paragraph
-from reportlab.lib.styles import getSampleStyleSheet
-from reportlab.lib.pagesizes import letter
+from reportlab.lib import colors
+from reportlab.lib.pagesizes import landscape, letter
+from reportlab.lib.units import inch  # added inch import
+from reportlab.platypus import Table, TableStyle, PageBreak
 from bs4 import BeautifulSoup
 
 # function to get plain text and count characters from HTML
