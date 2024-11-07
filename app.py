@@ -23,10 +23,10 @@ st.header("Text Placements")
 st.text("Enter Job code and date")
 job_code_text = st.text_input("Enter Job code and date (Text Ads)", max_chars=27)
 
-# message entries with rich-text formatting
+# message entries with rich-text formatting for Headline
 for i in range(1, 5):
     st.subheader(f"Message #{i}")
-    headline = st.text_input(f"Headline #{i}", max_chars=80)
+    headline = st_quill(f"Headline #{i}", html=True, placeholder="Enter formatted headline here...")
     body_copy = st_quill(f"Body Copy #{i}", html=True, placeholder="Enter formatted body copy here...")
     references = st_quill(f"References/Footnotes #{i}", html=True, placeholder="Enter formatted references here...")
     cta = st.text_input(f"CTA #{i}", max_chars=20)
@@ -42,8 +42,7 @@ job_code_email = st.text_input("Enter Job code and date (Emails)", max_chars=27)
 
 for i in range(1, 5):
     st.subheader(f"Email #{i}")
-    subject_line = st.text_input(f"Email #{i} - Subject Line", max_chars=65)
-    email_headline = st.text_input(f"Email #{i} - Headline", max_chars=80)
+    subject_line = st_quill(f"Email #{i} - Subject Line", html=True, placeholder="Enter formatted subject line here...")
     email_body = st_quill(f"Email #{i} - Body Copy", html=True, placeholder="Enter formatted body copy here...")
     email_references = st_quill(f"Email #{i} - References/Footnotes", html=True, placeholder="Enter formatted references here...")
     email_cta = st.text_input(f"Email #{i} - CTA", max_chars=20)
@@ -78,7 +77,6 @@ if st.button("Generate PDF", key="generate_pdf"):
     for i in range(1, 5):
         elements.append(Paragraph(f"Email #{i}", styles["Heading2"]))
         elements.append(Paragraph(f"Subject Line: {subject_line}", styles["BodyText"]))
-        elements.append(Paragraph(f"Headline: {email_headline}", styles["BodyText"]))
         elements.append(Paragraph(f"Body Copy: {email_body}", styles["BodyText"]))
         elements.append(Paragraph(f"References/Footnotes: {email_references}", styles["BodyText"]))
         elements.append(Paragraph(f"CTA: {email_cta}", styles["BodyText"]))
