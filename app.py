@@ -4,8 +4,9 @@ from fpdf import FPDF
 import base64
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import landscape, letter
-from reportlab.lib.units import inch  # added inch import
-from reportlab.platypus import Table, TableStyle, PageBreak
+from reportlab.lib.units import inch
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, PageBreak, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
 from bs4 import BeautifulSoup
 
 # function to get plain text and count characters from HTML
