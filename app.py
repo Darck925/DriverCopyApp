@@ -61,5 +61,26 @@ if st.button("Generate PDF"):
         pdf.add_section(f"Email #{i}", f"Subject Line: {subject_line}\nHeadline: {email_headline}\nBody: {email_body}\nCTA: {email_cta}\nLink: {email_cta_link}")
 
     pdf.output("Promo_Driver_Script.pdf")
-    st.success("PDF generated successfully! Check your download folder.")
+import base64
+
+# generate pdf as before
+if st.button("Generate PDF"):
+    pdf = PDF()
+    pdf.add_page()
+
+    pdf.add_section("Job Code", job_code)
+    for i in range(1, 5):
+        pdf.add_section(f"Message #{i}", f"Headline: {headline}\nBody: {body_copy}\nCTA: {cta}\nLink: {cta_link}")
+
+    for i in range(1, 5):
+        pdf.add_section(f"Email #{i}", f"Subject Line: {subject_line}\nHeadline: {email_headline}\nBody: {email_body}\nCTA: {email_cta}\nLink: {email_cta_link}")
+
+    pdf.output("Promo_Driver_Script.pdf")
+
+    # read the PDF and convert it to a downloadable format
+    with open("Promo_Driver_Script.pdf", "rb") as f:
+        pdf_data = f.read()
+        b64 = base64.b64encode(pdf_data).decode()
+        href = f'<a href="data:application/octet-stream;base64,{b64}" download="Promo_Driver_Script.pdf">Download PDF</a>'
+        st.markdown(href, unsafe_allow_html=True)
 
