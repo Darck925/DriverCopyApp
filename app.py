@@ -49,7 +49,7 @@ for i in range(1, 5):
     st.write("---")
 
 # generate pdf
-if st.button("Generate PDF"):
+if st.button("Generate PDF", key="generate_pdf_1"):
     pdf = PDF()
     pdf.add_page()
 
@@ -64,7 +64,7 @@ if st.button("Generate PDF"):
 import base64
 
 # generate pdf as before
-if st.button("Generate PDF"):
+if st.button("Generate PDF", key="generate_pdf_2"):
     pdf = PDF()
     pdf.add_page()
 
