@@ -100,38 +100,90 @@ for i in range(1, 5):
     
     st.write("---")
 
-# generate pdf with rich-text support
+# generate pdf with table formatting to match template layout
 if st.button("Generate PDF", key="generate_pdf"):
+    from reportlab.lib import colors
+    from reportlab.lib.units import inch
+    from reportlab.platypus import Table, TableStyle
+
     pdf = SimpleDocTemplate("Promo_Driver_Script.pdf", pagesize=letter)
     elements = []
     styles = getSampleStyleSheet()
 
-    # add program details
+    # add program details section
     program_details = f"SF#: {sf_number}<br/>Pharma: {pharma}<br/>Brand: {brand}<br/>Product: {product}<br/>Product Abbreviation: {product_abbr}<br/>Program URL: {program_url}"
     elements.append(Paragraph("Program Details", styles["Heading2"]))
     elements.append(Paragraph(program_details, styles["BodyText"]))
 
-    # add text placements with rich-text formatting
+    # text placements table
     elements.append(Paragraph("Text Placements Job Code", styles["Heading2"]))
     elements.append(Paragraph(job_code_text, styles["BodyText"]))
-    for i in range(1, 5):
-        elements.append(Paragraph(f"Message #{i}", styles["Heading2"]))
-        elements.append(Paragraph(f"Headline: {headline_text}", styles["BodyText"]))
-        elements.append(Paragraph(f"Body Copy: {body_copy_text}", styles["BodyText"]))
-        elements.append(Paragraph(f"References/Footnotes: {references_text}", styles["BodyText"]))
-        elements.append(Paragraph(f"CTA: {cta}", styles["BodyText"]))
-        elements.append(Paragraph(f"CTA Link: {cta_link}", styles["BodyText"]))
 
-    # add email placements with rich-text formatting
+    # define table data with headers for text placements
+    text_table_data = [
+        ["Message #", "Headline (80 chars max)", "Body Copy (100 chars max)", "References/Footnotes (86 chars max)", "CTA (20 chars max)", "CTA Link"]
+    ]
+
+    # add each message row with data
+    for i in range(1, 5):
+        text_table_data.append([
+            f"Message #{i}",
+            headline_text,
+            body_copy_text,
+            references_text,
+            cta,
+            cta_link
+        ])
+
+    # create and style the text placements table
+    text_table = Table(text_table_data, colWidths=[1 * inch, 2 * inch, 2 * inch, 2 * inch, 1 * inch, 2 * inch])
+    text_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+    ]))
+
+    elements.append(text_table)
+
+    # email placements table
     elements.append(Paragraph("Email Job Code", styles["Heading2"]))
     elements.append(Paragraph(job_code_email, styles["BodyText"]))
+
+    # define table data with headers for email placements
+    email_table_data = [
+        ["Email #", "Subject Line (65 chars max)", "Body Copy (350 chars max)", "References/Footnotes (86 chars max)", "CTA (20 chars max)", "CTA Link"]
+    ]
+
+    # add each email row with data
     for i in range(1, 5):
-        elements.append(Paragraph(f"Email #{i}", styles["Heading2"]))
-        elements.append(Paragraph(f"Subject Line: {subject_text}", styles["BodyText"]))
-        elements.append(Paragraph(f"Body Copy: {email_body_text}", styles["BodyText"]))
-        elements.append(Paragraph(f"References/Footnotes: {email_references_text}", styles["BodyText"]))
-        elements.append(Paragraph(f"CTA: {email_cta}", styles["BodyText"]))
-        elements.append(Paragraph(f"CTA Link: {email_cta_link}", styles["BodyText"]))
+        email_table_data.append([
+            f"Email #{i}",
+            subject_text,
+            email_body_text,
+            email_references_text,
+            email_cta,
+            email_cta_link
+        ])
+
+    # create and style the email placements table
+    email_table = Table(email_table_data, colWidths=[1 * inch, 2 * inch, 3 * inch, 2 * inch, 1 * inch, 2 * inch])
+    email_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 0.5, colors.black),
+    ]))
+
+    elements.append(email_table)
 
     # save the pdf
     pdf.build(elements)
