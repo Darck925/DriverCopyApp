@@ -13,6 +13,16 @@ def get_text_and_count(html_content):
     text = soup.get_text()
     return text, len(text)
 
+# add custom css for larger bold labels
+st.markdown("""
+    <style>
+    .label {
+        font-weight: bold;
+        font-size: 18px;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
 # program details section
 st.title("Promo Driver Copy Entry")
 
@@ -27,32 +37,32 @@ program_url = st.text_input("Program URL")
 # text placements section
 st.header("Text Placements")
 
-st.text("Enter Job code and date")
+st.markdown('<p class="label">Enter Job code and date</p>', unsafe_allow_html=True)
 job_code_text = st.text_input("Enter Job code and date (Text Ads)", max_chars=27)
 
 # message entries with rich-text formatting for Headline
 for i in range(1, 5):
     st.subheader(f"Message #{i}")
-
-    st.text("Headline")
+    
+    st.markdown('<p class="label">Headline</p>', unsafe_allow_html=True)
     headline = st_quill(f"Headline #{i}", html=True, placeholder="Enter formatted headline here...")
     headline_text, headline_count = get_text_and_count(headline)
     st.write(f"Character count: {headline_count} / 80")
     
-    st.text("Body Copy (100 characters max)")
+    st.markdown('<p class="label">Body Copy (100 characters max)</p>', unsafe_allow_html=True)
     body_copy = st_quill(f"Body Copy #{i}", html=True, placeholder="Enter formatted body copy here...")
     body_copy_text, body_copy_count = get_text_and_count(body_copy)
     st.write(f"Character count: {body_copy_count} / 100")
     
-    st.text("References/Footnotes (86 characters max)")
+    st.markdown('<p class="label">References/Footnotes (86 characters max)</p>', unsafe_allow_html=True)
     references = st_quill(f"References/Footnotes #{i}", html=True, placeholder="Enter formatted references here...")
     references_text, references_count = get_text_and_count(references)
     st.write(f"Character count: {references_count} / 86")
     
-    st.text("CTA (20 characters max)")
+    st.markdown('<p class="label">CTA (20 characters max)</p>', unsafe_allow_html=True)
     cta = st.text_input(f"CTA #{i}", max_chars=20)
     
-    st.text("CTA Link")
+    st.markdown('<p class="label">CTA Link</p>', unsafe_allow_html=True)
     cta_link = st.text_input(f"CTA Link #{i}", value="https://")
     
     st.write("---")
@@ -61,31 +71,31 @@ for i in range(1, 5):
 st.header("Unbranded Emails")
 
 # separate job code field for email section
-st.text("Enter Job code and date for Emails")
+st.markdown('<p class="label">Enter Job code and date for Emails</p>', unsafe_allow_html=True)
 job_code_email = st.text_input("Enter Job code and date (Emails)", max_chars=27)
 
 for i in range(1, 5):
     st.subheader(f"Email #{i}")
     
-    st.text("Subject Line (65 characters max)")
+    st.markdown('<p class="label">Subject Line (65 characters max)</p>', unsafe_allow_html=True)
     subject_line = st_quill(f"Email #{i} - Subject Line", html=True, placeholder="Enter formatted subject line here...")
     subject_text, subject_count = get_text_and_count(subject_line)
     st.write(f"Character count: {subject_count} / 65")
     
-    st.text("Body Copy (350 characters max)")
+    st.markdown('<p class="label">Body Copy (350 characters max)</p>', unsafe_allow_html=True)
     email_body = st_quill(f"Email #{i} - Body Copy", html=True, placeholder="Enter formatted body copy here...")
     email_body_text, email_body_count = get_text_and_count(email_body)
     st.write(f"Character count: {email_body_count} / 350")
     
-    st.text("References/Footnotes (86 characters max)")
+    st.markdown('<p class="label">References/Footnotes (86 characters max)</p>', unsafe_allow_html=True)
     email_references = st_quill(f"Email #{i} - References/Footnotes", html=True, placeholder="Enter formatted references here...")
     email_references_text, email_references_count = get_text_and_count(email_references)
     st.write(f"Character count: {email_references_count} / 86")
     
-    st.text("CTA (20 characters max)")
+    st.markdown('<p class="label">CTA (20 characters max)</p>', unsafe_allow_html=True)
     email_cta = st.text_input(f"Email #{i} - CTA", max_chars=20)
     
-    st.text("CTA Link")
+    st.markdown('<p class="label">CTA Link</p>', unsafe_allow_html=True)
     email_cta_link = st.text_input(f"Email #{i} - CTA Link", value="https://")
     
     st.write("---")
