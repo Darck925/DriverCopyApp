@@ -107,6 +107,7 @@ if st.button("Generate PDF", key="generate_pdf"):
     from reportlab.lib import colors
     from reportlab.lib.pagesizes import landscape, letter
     from reportlab.platypus import Table, TableStyle, PageBreak
+    from bs4 import BeautifulSoup
 
     pdf = SimpleDocTemplate("Promo_Driver_Script.pdf", pagesize=landscape(letter))
     elements = []
@@ -126,8 +127,14 @@ if st.button("Generate PDF", key="generate_pdf"):
         ["Message #", "Headline (80 chars max)", "Body Copy (100 chars max)", "References/Footnotes (86 chars max)", "CTA (20 chars max)", "CTA Link"]
     ]
 
-    # add each message row with data
+    # add each message row with parsed data
     for i in range(1, 5):
+        headline_text, _ = get_text_and_count(st_quill(f"Headline #{i}", html=True))
+        body_copy_text, _ = get_text_and_count(st_quill(f"Body Copy #{i}", html=True))
+        references_text, _ = get_text_and_count(st_quill(f"References/Footnotes #{i}", html=True))
+        cta = st.text_input(f"CTA #{i}", max_chars=20)
+        cta_link = st.text_input(f"CTA Link #{i}", value="https://")
+        
         text_table_data.append([
             f"Message #{i}",
             headline_text,
@@ -164,8 +171,14 @@ if st.button("Generate PDF", key="generate_pdf"):
         ["Email #", "Subject Line (65 chars max)", "Body Copy (350 chars max)", "References/Footnotes (86 chars max)", "CTA (20 chars max)", "CTA Link"]
     ]
 
-    # add each email row with data
+    # add each email row with parsed data
     for i in range(1, 5):
+        subject_text, _ = get_text_and_count(st_quill(f"Email #{i} - Subject Line", html=True))
+        email_body_text, _ = get_text_and_count(st_quill(f"Email #{i} - Body Copy", html=True))
+        email_references_text, _ = get_text_and_count(st_quill(f"Email #{i} - References/Footnotes", html=True))
+        email_cta = st.text_input(f"Email #{i} - CTA", max_chars=20)
+        email_cta_link = st.text_input(f"Email #{i} - CTA Link", value="https://")
+        
         email_table_data.append([
             f"Email #{i}",
             subject_text,
