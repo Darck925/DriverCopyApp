@@ -84,41 +84,48 @@ for i in range(1, 5):
     email_cta_link = st.text_input(f"CTA Link #{i}", value="https://", key=f"email_cta_link_{i}")
     email_cta_links.append(email_cta_link)
 
-# generate pdf with forced non-bold and black font color
+# generate pdf with selective bold styling only for headers
 if st.button("Generate PDF"):
     pdf = SimpleDocTemplate("Promo_Driver_Script.pdf", pagesize=landscape(letter))
     elements = []
     styles = getSampleStyleSheet()
 
-    # enforce non-bold font across all body text
+    # define non-bold body text style
     body_text_style = styles["BodyText"].clone('body_text_style')
     body_text_style.fontName = "Helvetica"  # set explicitly to non-bold Helvetica
     body_text_style.fontSize = 10
     body_text_style.textColor = colors.black
 
-    # force a non-bold header style
-    non_bold_header_style = styles["BodyText"].clone('non_bold_header_style')
-    non_bold_header_style.fontName = "Helvetica"
-    non_bold_header_style.fontSize = 10
-    non_bold_header_style.textColor = colors.whitesmoke
+    # define bold style for specific headers
+    bold_header_style = styles["Heading2"].clone('bold_header_style')
+    bold_header_style.fontName = "Helvetica-Bold"
+    bold_header_style.fontSize = 12
+    bold_header_style.textColor = colors.black
+
+    # define a smaller bold style for table headers
+    table_header_style = styles["BodyText"].clone('table_header_style')
+    table_header_style.fontName = "Helvetica-Bold"
+    table_header_style.fontSize = 10
+    table_header_style.textColor = colors.whitesmoke
 
     # program details section
     program_details = f"SF#: {sf_number}<br/>Pharma: {pharma}<br/>Brand: {brand}<br/>Product: {product}<br/>Product Abbreviation: {product_abbr}<br/>Program URL: {program_url}"
-    elements.append(Paragraph("Program Details", styles["Heading2"]))
-    elements.append(Paragraph(f'<font color="black">{program_details}</font>', body_text_style))
+    elements.append(Paragraph("Program Details", bold_header_style))  # bold header
+    elements.append(Paragraph(f'<font color="black">{program_details}</font>', body_text_style))  # non-bold body
 
-    # text placements table
-    elements.append(Paragraph("Text Placements Job Code", styles["Heading2"]))
-    elements.append(Paragraph(f'<font color="black">{job_code_text}</font>', body_text_style))
+    # text placements section with job code header
+    elements.append(Paragraph("Text Placements Job Code", bold_header_style))  # bold header
+    elements.append(Paragraph(f'<font color="black">{job_code_text}</font>', body_text_style))  # non-bold body
 
+    # text placements table with selectively bold headers
     text_table_data = [
         [
             "Message #",
-            Paragraph('<font color="whitesmoke">Headline<br/>(80 chars max)</font>', non_bold_header_style),
-            Paragraph('<font color="whitesmoke">Body Copy<br/>(100 chars max)</font>', non_bold_header_style),
-            Paragraph('<font color="whitesmoke">References/Footnotes<br/>(86 chars max)</font>', non_bold_header_style),
-            Paragraph('<font color="whitesmoke">CTA<br/>(20 chars max)</font>', non_bold_header_style),
-            Paragraph('<font color="whitesmoke">CTA Link</font>', non_bold_header_style)
+            Paragraph('<font color="whitesmoke">Headline<br/>(80 chars max)</font>', table_header_style),
+            Paragraph('<font color="whitesmoke">Body Copy<br/>(100 chars max)</font>', table_header_style),
+            Paragraph('<font color="whitesmoke">References/Footnotes<br/>(86 chars max)</font>', table_header_style),
+            Paragraph('<font color="whitesmoke">CTA<br/>(20 chars max)</font>', table_header_style),
+            Paragraph('<font color="whitesmoke">CTA Link</font>', table_header_style)
         ]
     ]
     for i in range(4):
@@ -136,7 +143,7 @@ if st.button("Generate PDF"):
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),  # explicitly set header row to non-bold Helvetica
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, 0), 10),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.white),
@@ -147,18 +154,19 @@ if st.button("Generate PDF"):
     # add page break
     elements.append(PageBreak())
 
-    # email placements table
-    elements.append(Paragraph("Email Job Code", styles["Heading2"]))
-    elements.append(Paragraph(f'<font color="black">{job_code_email}</font>', body_text_style))
+    # email placements section with job code header
+    elements.append(Paragraph("Email Job Code", bold_header_style))  # bold header
+    elements.append(Paragraph(f'<font color="black">{job_code_email}</font>', body_text_style))  # non-bold body
 
+    # email placements table with selectively bold headers
     email_table_data = [
         [
             "Email #",
-            Paragraph('<font color="whitesmoke">Subject Line<br/>(65 chars max)</font>', non_bold_header_style),
-            Paragraph('<font color="whitesmoke">Body Copy<br/>(350 chars max)</font>', non_bold_header_style),
-            Paragraph('<font color="whitesmoke">References/Footnotes<br/>(86 chars max)</font>', non_bold_header_style),
-            Paragraph('<font color="whitesmoke">CTA<br/>(20 chars max)</font>', non_bold_header_style),
-            Paragraph('<font color="whitesmoke">CTA Link</font>', non_bold_header_style)
+            Paragraph('<font color="whitesmoke">Subject Line<br/>(65 chars max)</font>', table_header_style),
+            Paragraph('<font color="whitesmoke">Body Copy<br/>(350 chars max)</font>', table_header_style),
+            Paragraph('<font color="whitesmoke">References/Footnotes<br/>(86 chars max)</font>', table_header_style),
+            Paragraph('<font color="whitesmoke">CTA<br/>(20 chars max)</font>', table_header_style),
+            Paragraph('<font color="whitesmoke">CTA Link</font>', table_header_style)
         ]
     ]
     for i in range(4):
@@ -176,7 +184,7 @@ if st.button("Generate PDF"):
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),  # explicitly set header row to non-bold Helvetica
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
         ('FONTSIZE', (0, 0), (-1, 0), 10),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.white),
