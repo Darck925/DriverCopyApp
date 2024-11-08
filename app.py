@@ -84,42 +84,42 @@ for i in range(1, 5):
     email_cta_link = st.text_input(f"CTA Link #{i}", value="https://", key=f"email_cta_link_{i}")
     email_cta_links.append(email_cta_link)
 
-# generate pdf with selective bold using only direct <b> tags and explicit Helvetica-Bold for headers
+# generate pdf with enforced Helvetica-Bold on headers only
 if st.button("Generate PDF"):
     pdf = SimpleDocTemplate("Promo_Driver_Script.pdf", pagesize=landscape(letter))
     elements = []
     styles = getSampleStyleSheet()
 
-    # enforce non-bold font across all body text
-    body_text_style = styles["BodyText"]
-    body_text_style.fontName = "Helvetica"
+    # define strict non-bold style for body text
+    body_text_style = styles["BodyText"].clone('body_text_style')
+    body_text_style.fontName = "Helvetica"  # strictly non-bold Helvetica
     body_text_style.fontSize = 10
     body_text_style.textColor = colors.black
 
-    # define bold style for headers
-    header_bold_style = styles["Heading2"]
-    header_bold_style.fontName = "Helvetica-Bold"
+    # enforce bold style for specific headers with Helvetica-Bold
+    header_bold_style = styles["Heading2"].clone('header_bold_style')
+    header_bold_style.fontName = "Helvetica-Bold"  # strict bold
     header_bold_style.fontSize = 12
     header_bold_style.textColor = colors.black
 
-    # program details section with bold header
+    # program details with enforced bold header
     program_details = f"SF#: {sf_number}<br/>Pharma: {pharma}<br/>Brand: {brand}<br/>Product: {product}<br/>Product Abbreviation: {product_abbr}<br/>Program URL: {program_url}"
-    elements.append(Paragraph("Program Details", header_bold_style))  # bold header
+    elements.append(Paragraph("Program Details", header_bold_style))
     elements.append(Paragraph(f'<font color="black">{program_details}</font>', body_text_style))
 
-    # text placements section with job code header
-    elements.append(Paragraph("Text Placements Job Code", header_bold_style))  # bold header
+    # text placements with enforced bold header
+    elements.append(Paragraph("Text Placements Job Code", header_bold_style))
     elements.append(Paragraph(f'<font color="black">{job_code_text}</font>', body_text_style))
 
-    # text placements table with bold table headers
+    # text placements table with enforced bold headers
     text_table_data = [
         [
             "Message #",
-            Paragraph('<b>Headline<br/>(80 chars max)</b>', header_bold_style),
-            Paragraph('<b>Body Copy<br/>(100 chars max)</b>', header_bold_style),
-            Paragraph('<b>References/Footnotes<br/>(86 chars max)</b>', header_bold_style),
-            Paragraph('<b>CTA<br/>(20 chars max)</b>', header_bold_style),
-            Paragraph('<b>CTA Link</b>', header_bold_style)
+            Paragraph('Headline<br/>(80 chars max)', header_bold_style),
+            Paragraph('Body Copy<br/>(100 chars max)', header_bold_style),
+            Paragraph('References/Footnotes<br/>(86 chars max)', header_bold_style),
+            Paragraph('CTA<br/>(20 chars max)', header_bold_style),
+            Paragraph('CTA Link', header_bold_style)
         ]
     ]
     for i in range(4):
@@ -148,19 +148,19 @@ if st.button("Generate PDF"):
     # add page break
     elements.append(PageBreak())
 
-    # email placements section with job code header
-    elements.append(Paragraph("Email Job Code", header_bold_style))  # bold header
+    # email placements with enforced bold header
+    elements.append(Paragraph("Email Job Code", header_bold_style))
     elements.append(Paragraph(f'<font color="black">{job_code_email}</font>', body_text_style))
 
-    # email placements table with bold table headers
+    # email placements table with enforced bold headers
     email_table_data = [
         [
             "Email #",
-            Paragraph('<b>Subject Line<br/>(65 chars max)</b>', header_bold_style),
-            Paragraph('<b>Body Copy<br/>(350 chars max)</b>', header_bold_style),
-            Paragraph('<b>References/Footnotes<br/>(86 chars max)</b>', header_bold_style),
-            Paragraph('<b>CTA<br/>(20 chars max)</b>', header_bold_style),
-            Paragraph('<b>CTA Link</b>', header_bold_style)
+            Paragraph('Subject Line<br/>(65 chars max)', header_bold_style),
+            Paragraph('Body Copy<br/>(350 chars max)', header_bold_style),
+            Paragraph('References/Footnotes<br/>(86 chars max)', header_bold_style),
+            Paragraph('CTA<br/>(20 chars max)', header_bold_style),
+            Paragraph('CTA Link', header_bold_style)
         ]
     ]
     for i in range(4):
@@ -195,8 +195,3 @@ if st.button("Generate PDF"):
         b64 = base64.b64encode(pdf_data).decode()
         href = f'<a href="data:application/octet-stream;base64,{b64}" download="Promo_Driver_Script.pdf">Download PDF</a>'
     st.markdown(href, unsafe_allow_html=True)
-
-
-
-
-
