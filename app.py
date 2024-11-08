@@ -12,11 +12,21 @@ from reportlab.lib.enums import TA_LEFT
 # function to sanitize and apply custom formatting for HTML content
 def sanitize_html(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
-    allowed_tags = {"b", "i", "u", "br"}
+    allowed_tags = {"i", "u", "br"}  # removed "b" from allowed tags
     for tag in soup.find_all(True):
         if tag.name not in allowed_tags:
             tag.unwrap()
     return str(soup)
+
+# updated display_rtf_with_counter function to apply sanitize_html
+def display_rtf_with_counter(label, placeholder):
+    rtf_content = st_quill(label, html=True, placeholder=placeholder)
+    if rtf_content:
+        char_count = len(BeautifulSoup(rtf_content, "html.parser").get_text())
+        st.write(f"Character count: {char_count}")
+    # sanitize html content to remove any residual bold tags
+    sanitized_content = sanitize_html(rtf_content)
+    return sanitized_content
 
 # utility function to display character count
 def display_rtf_with_counter(label, placeholder):
