@@ -7,15 +7,26 @@ from reportlab.lib.pagesizes import landscape, letter
 from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, PageBreak
 from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet
+from reportlab.lib.enums import TA_LEFT
 
-# function to sanitize HTML from st_quill to retain only supported tags
+# function to sanitize and apply custom formatting for HTML content
 def sanitize_html(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
-    # allowed tags and their basic attributes
+
+    # allowed tags for reportlab compatibility
     allowed_tags = {"b", "i", "u", "br"}
     for tag in soup.find_all(True):
         if tag.name not in allowed_tags:
             tag.unwrap()
+        elif tag.name in {"sub", "sup"}:
+            # Apply baseline shift to simulate subscript and superscript
+            if tag.name == "sub":
+                tag.wrap(soup.new_tag("font", size="8"))
+                tag.insert_before(" ")
+            elif tag.name == "sup":
+                tag.wrap(soup.new_tag("font", size="8"))
+                tag.insert_before(" ")
+
     return str(soup)
 
 # collect program details inputs
@@ -75,10 +86,10 @@ for i in range(1, 5):
     email_references = st_quill(f"Email #{i} - References/Footnotes", html=True, placeholder="Enter formatted references here...")
     email_references_texts.append(sanitize_html(email_references))
 
-    email_cta = st.text_input(f"Email #{i} - CTA", max_chars=20)
+    email_cta = st.text_input(f"Email #{i}", max_chars=20)
     email_cta_texts.append(email_cta)
 
-    email_cta_link = st.text_input(f"Email #{i} - CTA Link", value="https://")
+    email_cta_link = st.text_input(f"CTA Link", value="https://")
     email_cta_links.append(email_cta_link)
 
 # generate pdf with landscape orientation, page break, and updated styling
@@ -86,6 +97,12 @@ if st.button("Generate PDF"):
     pdf = SimpleDocTemplate("Promo_Driver_Script.pdf", pagesize=landscape(letter))
     elements = []
     styles = getSampleStyleSheet()
+
+    # adjust styles to allow alignment and formatting
+    header_style = styles["BodyText"]
+    header_style.fontName = "Helvetica-Bold"
+    header_style.textColor = colors.whitesmoke
+    header_style.alignment = TA_LEFT
 
     # program details section
     program_details = f"SF#: {sf_number}<br/>Pharma: {pharma}<br/>Brand: {brand}<br/>Product: {product}<br/>Product Abbreviation: {product_abbr}<br/>Program URL: {program_url}"
@@ -99,11 +116,11 @@ if st.button("Generate PDF"):
     text_table_data = [
         [
             "Message #",
-            Paragraph('<font color="whitesmoke"><b>Headline<br/>(80 chars max)</b></font>', styles["BodyText"]),
-            Paragraph('<font color="whitesmoke"><b>Body Copy<br/>(100 chars max)</b></font>', styles["BodyText"]),
-            Paragraph('<font color="whitesmoke"><b>References/Footnotes<br/>(86 chars max)</b></font>', styles["BodyText"]),
-            Paragraph('<font color="whitesmoke"><b>CTA<br/>(20 chars max)</b></font>', styles["BodyText"]),
-            Paragraph('<font color="whitesmoke"><b>CTA Link</b></font>', styles["BodyText"])
+            Paragraph('<font color="whitesmoke"><b>Headline<br/>(80 chars max)</b></font>', header_style),
+            Paragraph('<font color="whitesmoke"><b>Body Copy<br/>(100 chars max)</b></font>', header_style),
+            Paragraph('<font color="whitesmoke"><b>References/Footnotes<br/>(86 chars max)</b></font>', header_style),
+            Paragraph('<font color="whitesmoke"><b>CTA<br/>(20 chars max)</b></font>', header_style),
+            Paragraph('<font color="whitesmoke"><b>CTA Link</b></font>', header_style)
         ]
     ]
     for i in range(4):
@@ -139,11 +156,11 @@ if st.button("Generate PDF"):
     email_table_data = [
         [
             "Email #",
-            Paragraph('<font color="whitesmoke"><b>Subject Line<br/>(65 chars max)</b></font>', styles["BodyText"]),
-            Paragraph('<font color="whitesmoke"><b>Body Copy<br/>(350 chars max)</b></font>', styles["BodyText"]),
-            Paragraph('<font color="whitesmoke"><b>References/Footnotes<br/>(86 chars max)</b></font>', styles["BodyText"]),
-            Paragraph('<font color="whitesmoke"><b>CTA<br/>(20 chars max)</b></font>', styles["BodyText"]),
-            Paragraph('<font color="whitesmoke"><b>CTA Link</b></font>', styles["BodyText"])
+            Paragraph('<font color="whitesmoke"><b>Subject Line<br/>(65 chars max)</b></font>', header_style),
+            Paragraph('<font color="whitesmoke"><b>Body Copy<br/>(350 chars max)</b></font>', header_style),
+            Paragraph('<font color="whitesmoke"><b>References/Footnotes<br/>(86 chars max)</b></font>', header_style),
+            Paragraph('<font color="whitesmoke"><b>CTA<br/>(20 chars max)</b></font>', header_style),
+            Paragraph('<font color="whitesmoke"><b>CTA Link</b></font>', header_style)
         ]
     ]
     for i in range(4):
