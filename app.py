@@ -1,10 +1,10 @@
 import streamlit as st
 from streamlit_quill import st_quill
 from bs4 import BeautifulSoup
-import base64  # add this line for base64 encoding
+import base64
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import landscape, letter
-from reportlab.platypus import Table, TableStyle, SimpleDocTemplate, Paragraph, PageBreak
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, PageBreak
 from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet
 
@@ -104,11 +104,11 @@ if st.button("Generate PDF"):
     for i in range(4):
         text_table_data.append([
             f"Message #{i + 1}",
-            headline_texts[i],
-            body_copy_texts[i],
-            references_texts[i],
-            cta_texts[i],
-            cta_links[i]
+            Paragraph(headline_texts[i], styles["BodyText"]),
+            Paragraph(body_copy_texts[i], styles["BodyText"]),
+            Paragraph(references_texts[i], styles["BodyText"]),
+            Paragraph(cta_texts[i], styles["BodyText"]),
+            Paragraph(cta_links[i], styles["BodyText"]),
         ])
 
     text_table = Table(text_table_data, colWidths=[1 * inch, 2 * inch, 3 * inch, 2 * inch, 1 * inch, 2 * inch])
@@ -137,11 +137,11 @@ if st.button("Generate PDF"):
     for i in range(4):
         email_table_data.append([
             f"Email #{i + 1}",
-            subject_texts[i],
-            email_body_texts[i],
-            email_references_texts[i],
-            email_cta_texts[i],
-            email_cta_links[i]
+            Paragraph(subject_texts[i], styles["BodyText"]),
+            Paragraph(email_body_texts[i], styles["BodyText"]),
+            Paragraph(email_references_texts[i], styles["BodyText"]),
+            Paragraph(email_cta_texts[i], styles["BodyText"]),
+            Paragraph(email_cta_links[i], styles["BodyText"]),
         ])
 
     email_table = Table(email_table_data, colWidths=[1 * inch, 2 * inch, 3 * inch, 2 * inch, 1 * inch, 2 * inch])
