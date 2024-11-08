@@ -1,6 +1,7 @@
 import streamlit as st
 from streamlit_quill import st_quill
 from bs4 import BeautifulSoup
+import base64  # add this line for base64 encoding
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import landscape, letter
 from reportlab.platypus import Table, TableStyle, SimpleDocTemplate, Paragraph, PageBreak
