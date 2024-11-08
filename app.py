@@ -98,8 +98,16 @@ if st.button("Generate PDF"):
     elements.append(Paragraph("Text Placements Job Code", styles["Heading2"]))
     elements.append(Paragraph(job_code_text, styles["BodyText"]))
 
+    # update headers to include line breaks for character counts
     text_table_data = [
-        ["Message #", "Headline (80 chars max)", "Body Copy (100 chars max)", "References/Footnotes (86 chars max)", "CTA (20 chars max)", "CTA Link"]
+        [
+            "Message #",
+            Paragraph("Headline<br/>(80 chars max)", styles["BodyText"]),
+            Paragraph("Body Copy<br/>(100 chars max)", styles["BodyText"]),
+            Paragraph("References/Footnotes<br/>(86 chars max)", styles["BodyText"]),
+            Paragraph("CTA<br/>(20 chars max)", styles["BodyText"]),
+            "CTA Link"
+        ]
     ]
     for i in range(4):
         text_table_data.append([
@@ -127,12 +135,19 @@ if st.button("Generate PDF"):
     # add page break before email placements
     elements.append(PageBreak())
 
-    # email placements table
+    # email placements table with line breaks for character counts in headers
     elements.append(Paragraph("Email Job Code", styles["Heading2"]))
     elements.append(Paragraph(job_code_email, styles["BodyText"]))
 
     email_table_data = [
-        ["Email #", "Subject Line (65 chars max)", "Body Copy (350 chars max)", "References/Footnotes (86 chars max)", "CTA (20 chars max)", "CTA Link"]
+        [
+            "Email #",
+            Paragraph("Subject Line<br/>(65 chars max)", styles["BodyText"]),
+            Paragraph("Body Copy<br/>(350 chars max)", styles["BodyText"]),
+            Paragraph("References/Footnotes<br/>(86 chars max)", styles["BodyText"]),
+            Paragraph("CTA<br/>(20 chars max)", styles["BodyText"]),
+            "CTA Link"
+        ]
     ]
     for i in range(4):
         email_table_data.append([
@@ -166,3 +181,4 @@ if st.button("Generate PDF"):
         b64 = base64.b64encode(pdf_data).decode()
         href = f'<a href="data:application/octet-stream;base64,{b64}" download="Promo_Driver_Script.pdf">Download PDF</a>'
     st.markdown(href, unsafe_allow_html=True)
+
