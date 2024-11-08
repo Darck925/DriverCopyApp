@@ -63,7 +63,7 @@ for i in range(1, 5):
     cta = st.text_input(f"CTA #{i}", max_chars=20)
     cta_texts.append(cta)
 
-    cta_link = st.text_input(f"CTA Link #{i}", value="https://")
+    cta_link = st.text_input(f"CTA Link", value="https://", key=f"text_cta_link_{i}")
     cta_links.append(cta_link)
 
 # collect email placements data
@@ -98,7 +98,11 @@ if st.button("Generate PDF"):
     elements = []
     styles = getSampleStyleSheet()
 
-    # adjust styles to allow alignment and formatting
+    # define a custom style for body text with black font color
+    body_text_style = styles["BodyText"]
+    body_text_style.textColor = colors.black  # set font color to black
+    body_text_style.fontName = "Helvetica"
+
     header_style = styles["BodyText"]
     header_style.fontName = "Helvetica-Bold"
     header_style.textColor = colors.whitesmoke
@@ -107,11 +111,11 @@ if st.button("Generate PDF"):
     # program details section
     program_details = f"SF#: {sf_number}<br/>Pharma: {pharma}<br/>Brand: {brand}<br/>Product: {product}<br/>Product Abbreviation: {product_abbr}<br/>Program URL: {program_url}"
     elements.append(Paragraph("Program Details", styles["Heading2"]))
-    elements.append(Paragraph(program_details, styles["BodyText"]))
+    elements.append(Paragraph(program_details, body_text_style))
 
     # text placements table
     elements.append(Paragraph("Text Placements Job Code", styles["Heading2"]))
-    elements.append(Paragraph(job_code_text, styles["BodyText"]))
+    elements.append(Paragraph(job_code_text, body_text_style))
 
     text_table_data = [
         [
@@ -126,11 +130,11 @@ if st.button("Generate PDF"):
     for i in range(4):
         text_table_data.append([
             f"Message #{i + 1}",
-            Paragraph(headline_texts[i], styles["BodyText"]),
-            Paragraph(body_copy_texts[i], styles["BodyText"]),
-            Paragraph(references_texts[i], styles["BodyText"]),
-            Paragraph(cta_texts[i], styles["BodyText"]),
-            Paragraph(cta_links[i], styles["BodyText"]),
+            Paragraph(headline_texts[i], body_text_style),
+            Paragraph(body_copy_texts[i], body_text_style),
+            Paragraph(references_texts[i], body_text_style),
+            Paragraph(cta_texts[i], body_text_style),
+            Paragraph(cta_links[i], body_text_style),
         ])
 
     text_table = Table(text_table_data, colWidths=[1 * inch, 2 * inch, 3 * inch, 2 * inch, 1 * inch, 2 * inch])
@@ -151,7 +155,7 @@ if st.button("Generate PDF"):
 
     # email placements table with line breaks for character counts in headers
     elements.append(Paragraph("Email Job Code", styles["Heading2"]))
-    elements.append(Paragraph(job_code_email, styles["BodyText"]))
+    elements.append(Paragraph(job_code_email, body_text_style))
 
     email_table_data = [
         [
@@ -166,11 +170,11 @@ if st.button("Generate PDF"):
     for i in range(4):
         email_table_data.append([
             f"Email #{i + 1}",
-            Paragraph(subject_texts[i], styles["BodyText"]),
-            Paragraph(email_body_texts[i], styles["BodyText"]),
-            Paragraph(email_references_texts[i], styles["BodyText"]),
-            Paragraph(email_cta_texts[i], styles["BodyText"]),
-            Paragraph(email_cta_links[i], styles["BodyText"]),
+            Paragraph(subject_texts[i], body_text_style),
+            Paragraph(email_body_texts[i], body_text_style),
+            Paragraph(email_references_texts[i], body_text_style),
+            Paragraph(email_cta_texts[i], body_text_style),
+            Paragraph(email_cta_links[i], body_text_style),
         ])
 
     email_table = Table(email_table_data, colWidths=[1 * inch, 2 * inch, 3 * inch, 2 * inch, 1 * inch, 2 * inch])
