@@ -9,29 +9,19 @@ from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.enums import TA_LEFT
 
-# function to sanitize and apply custom formatting for HTML content
+# sanitize html function to retain formatting tags and remove unsupported tags
 def sanitize_html(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
-
-    # allowed tags for reportlab compatibility
     allowed_tags = {"b", "i", "u", "br"}
     for tag in soup.find_all(True):
         if tag.name not in allowed_tags:
             tag.unwrap()
-        elif tag.name in {"sub", "sup"}:
-            # Apply baseline shift to simulate subscript and superscript
-            if tag.name == "sub":
-                tag.wrap(soup.new_tag("font", size="8"))
-                tag.insert_before(" ")
-            elif tag.name == "sup":
-                tag.wrap(soup.new_tag("font", size="8"))
-                tag.insert_before(" ")
-
     return str(soup)
 
-# collect program details inputs
+# collect input fields
 st.title("Promo Driver Copy Entry")
 
+# program details section
 st.header("Program Details")
 sf_number = st.text_input("SF#")
 pharma = st.text_input("Pharma")
@@ -40,73 +30,56 @@ product = st.text_input("Product")
 product_abbr = st.text_input("Product Abbreviation")
 program_url = st.text_input("Program URL")
 
-# collect text placements data
+# text placements
 st.header("Text Placements")
-
-st.markdown('<p style="font-weight:bold; font-size:18px;">Enter Job code and date</p>', unsafe_allow_html=True)
 job_code_text = st.text_input("Enter Job code and date (Text Ads)", max_chars=27)
 
 headline_texts, body_copy_texts, references_texts, cta_texts, cta_links = [], [], [], [], []
 for i in range(1, 5):
     st.subheader(f"Message #{i}")
-
-    # Collect and sanitize each field's input data
-    headline = st_quill(f"Headline #{i}", html=True, placeholder="Enter formatted headline here...")
+    headline = st_quill(f"Headline #{i}", html=True)
     headline_texts.append(sanitize_html(headline))
-
-    body_copy = st_quill(f"Body Copy #{i}", html=True, placeholder="Enter formatted body copy here...")
+    body_copy = st_quill(f"Body Copy #{i}", html=True)
     body_copy_texts.append(sanitize_html(body_copy))
-
-    references = st_quill(f"References/Footnotes #{i}", html=True, placeholder="Enter formatted references here...")
+    references = st_quill(f"References/Footnotes #{i}", html=True)
     references_texts.append(sanitize_html(references))
-
     cta = st.text_input(f"CTA #{i}", max_chars=20)
     cta_texts.append(cta)
-
-    cta_link = st.text_input(f"CTA Link", value="https://", key=f"text_cta_link_{i}")
+    cta_link = st.text_input(f"CTA Link #{i}", value="https://", key=f"text_cta_link_{i}")
     cta_links.append(cta_link)
 
-# collect email placements data
+# email placements
 st.header("Unbranded Emails")
-
-st.markdown('<p style="font-weight:bold; font-size:18px;">Enter Job code and date for Emails</p>', unsafe_allow_html=True)
 job_code_email = st.text_input("Enter Job code and date (Emails)", max_chars=27)
 
 subject_texts, email_body_texts, email_references_texts, email_cta_texts, email_cta_links = [], [], [], [], []
 for i in range(1, 5):
     st.subheader(f"Email #{i}")
-
-    # Collect and sanitize each field's input data
-    subject_line = st_quill(f"Email #{i} - Subject Line", html=True, placeholder="Enter formatted subject line here...")
+    subject_line = st_quill(f"Email #{i} - Subject Line", html=True)
     subject_texts.append(sanitize_html(subject_line))
-
-    email_body = st_quill(f"Email #{i} - Body Copy", html=True, placeholder="Enter formatted body copy here...")
+    email_body = st_quill(f"Email #{i} - Body Copy", html=True)
     email_body_texts.append(sanitize_html(email_body))
-
-    email_references = st_quill(f"Email #{i} - References/Footnotes", html=True, placeholder="Enter formatted references here...")
+    email_references = st_quill(f"Email #{i} - References/Footnotes", html=True)
     email_references_texts.append(sanitize_html(email_references))
-
-    email_cta = st.text_input(f"Email #{i} - CTA", max_chars=20, key=f"email_cta_{i}")
+    email_cta = st.text_input(f"CTA #{i}", max_chars=20, key=f"email_cta_{i}")
     email_cta_texts.append(email_cta)
-
-    email_cta_link = st.text_input(f"CTA Link", value="https://", key=f"email_cta_link_{i}")
+    email_cta_link = st.text_input(f"CTA Link #{i}", value="https://", key=f"email_cta_link_{i}")
     email_cta_links.append(email_cta_link)
 
-# generate pdf with landscape orientation, page break, and updated styling
+# generate pdf button
 if st.button("Generate PDF"):
     pdf = SimpleDocTemplate("Promo_Driver_Script.pdf", pagesize=landscape(letter))
     elements = []
     styles = getSampleStyleSheet()
 
-    # define a custom style for body text with black font color
+    # custom styles for readability
     body_text_style = styles["BodyText"]
-    body_text_style.textColor = colors.black  # set font color to black
+    body_text_style.textColor = colors.black
     body_text_style.fontName = "Helvetica"
 
     header_style = styles["BodyText"]
     header_style.fontName = "Helvetica-Bold"
     header_style.textColor = colors.whitesmoke
-    header_style.alignment = TA_LEFT
 
     # program details section
     program_details = f"SF#: {sf_number}<br/>Pharma: {pharma}<br/>Brand: {brand}<br/>Product: {product}<br/>Product Abbreviation: {product_abbr}<br/>Program URL: {program_url}"
@@ -137,7 +110,7 @@ if st.button("Generate PDF"):
             Paragraph(cta_links[i], body_text_style),
         ])
 
-    text_table = Table(text_table_data, colWidths=[1 * inch, 2 * inch, 3 * inch, 2 * inch, 1 * inch, 2 * inch])
+    text_table = Table(text_table_data, colWidths=[0.7 * inch, 1.5 * inch, 2.5 * inch, 2 * inch, 1 * inch, 1.5 * inch])
     text_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
@@ -150,10 +123,10 @@ if st.button("Generate PDF"):
     ]))
     elements.append(text_table)
 
-    # add page break before email placements
+    # page break for email placements
     elements.append(PageBreak())
 
-    # email placements table with line breaks for character counts in headers
+    # email placements table
     elements.append(Paragraph("Email Job Code", styles["Heading2"]))
     elements.append(Paragraph(job_code_email, body_text_style))
 
@@ -177,7 +150,7 @@ if st.button("Generate PDF"):
             Paragraph(email_cta_links[i], body_text_style),
         ])
 
-    email_table = Table(email_table_data, colWidths=[1 * inch, 2 * inch, 3 * inch, 2 * inch, 1 * inch, 2 * inch])
+    email_table = Table(email_table_data, colWidths=[0.7 * inch, 1.5 * inch, 2.5 * inch, 2 * inch, 1 * inch, 1.5 * inch])
     email_table.setStyle(TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
