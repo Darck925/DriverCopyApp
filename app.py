@@ -9,7 +9,7 @@ from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet
 from reportlab.lib.enums import TA_LEFT
 
-# sanitize html to retain formatting tags and apply counters
+# function to sanitize and apply custom formatting for HTML content
 def sanitize_html(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
     allowed_tags = {"b", "i", "u", "br"}
@@ -29,7 +29,7 @@ def display_rtf_with_counter(label, placeholder):
 # collect input fields
 st.title("Promo Driver Copy Entry")
 
-# program details
+# program details section
 st.header("Program Details")
 sf_number = st.text_input("SF#")
 pharma = st.text_input("Pharma")
@@ -74,7 +74,7 @@ for i in range(1, 5):
     email_cta_link = st.text_input(f"CTA Link #{i}", value="https://", key=f"email_cta_link_{i}")
     email_cta_links.append(email_cta_link)
 
-# generate pdf with adjusted font color and character counter
+# generate pdf with black font color applied directly
 if st.button("Generate PDF"):
     pdf = SimpleDocTemplate("Promo_Driver_Script.pdf", pagesize=landscape(letter))
     elements = []
@@ -93,11 +93,11 @@ if st.button("Generate PDF"):
     # program details section
     program_details = f"SF#: {sf_number}<br/>Pharma: {pharma}<br/>Brand: {brand}<br/>Product: {product}<br/>Product Abbreviation: {product_abbr}<br/>Program URL: {program_url}"
     elements.append(Paragraph("Program Details", styles["Heading2"]))
-    elements.append(Paragraph(program_details, body_text_style))
+    elements.append(Paragraph(f'<font color="black">{program_details}</font>', body_text_style))
 
     # text placements table
     elements.append(Paragraph("Text Placements Job Code", styles["Heading2"]))
-    elements.append(Paragraph(job_code_text, body_text_style))
+    elements.append(Paragraph(f'<font color="black">{job_code_text}</font>', body_text_style))
 
     text_table_data = [
         [
@@ -112,11 +112,11 @@ if st.button("Generate PDF"):
     for i in range(4):
         text_table_data.append([
             f"Message #{i + 1}",
-            Paragraph(headline_texts[i], body_text_style),
-            Paragraph(body_copy_texts[i], body_text_style),
-            Paragraph(references_texts[i], body_text_style),
-            Paragraph(cta_texts[i], body_text_style),
-            Paragraph(cta_links[i], body_text_style),
+            Paragraph(f'<font color="black">{headline_texts[i]}</font>', body_text_style),
+            Paragraph(f'<font color="black">{body_copy_texts[i]}</font>', body_text_style),
+            Paragraph(f'<font color="black">{references_texts[i]}</font>', body_text_style),
+            Paragraph(f'<font color="black">{cta_texts[i]}</font>', body_text_style),
+            Paragraph(f'<font color="black">{cta_links[i]}</font>', body_text_style),
         ])
 
     text_table = Table(text_table_data, colWidths=[0.8 * inch, 2 * inch, 3 * inch, 2 * inch, 1.2 * inch, 2 * inch])
@@ -137,7 +137,7 @@ if st.button("Generate PDF"):
 
     # email placements table
     elements.append(Paragraph("Email Job Code", styles["Heading2"]))
-    elements.append(Paragraph(job_code_email, body_text_style))
+    elements.append(Paragraph(f'<font color="black">{job_code_email}</font>', body_text_style))
 
     email_table_data = [
         [
@@ -152,11 +152,11 @@ if st.button("Generate PDF"):
     for i in range(4):
         email_table_data.append([
             f"Email #{i + 1}",
-            Paragraph(subject_texts[i], body_text_style),
-            Paragraph(email_body_texts[i], body_text_style),
-            Paragraph(email_references_texts[i], body_text_style),
-            Paragraph(email_cta_texts[i], body_text_style),
-            Paragraph(email_cta_links[i], body_text_style),
+            Paragraph(f'<font color="black">{subject_texts[i]}</font>', body_text_style),
+            Paragraph(f'<font color="black">{email_body_texts[i]}</font>', body_text_style),
+            Paragraph(f'<font color="black">{email_references_texts[i]}</font>', body_text_style),
+            Paragraph(f'<font color="black">{email_cta_texts[i]}</font>', body_text_style),
+            Paragraph(f'<font color="black">{email_cta_links[i]}</font>', body_text_style),
         ])
 
     email_table = Table(email_table_data, colWidths=[0.8 * inch, 2 * inch, 3 * inch, 2 * inch, 1.2 * inch, 2 * inch])
