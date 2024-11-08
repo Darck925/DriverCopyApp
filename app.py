@@ -8,11 +8,15 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet
 
-# function to retain text formatting for quill content
-def get_text_and_count(html_content):
+# function to sanitize HTML from st_quill to retain only supported tags
+def sanitize_html(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
-    text = soup.get_text()
-    return text, len(text)
+    # allowed tags and their basic attributes
+    allowed_tags = {"b", "i", "u", "br"}
+    for tag in soup.find_all(True):
+        if tag.name not in allowed_tags:
+            tag.unwrap()
+    return str(soup)
 
 # collect program details inputs
 st.title("Promo Driver Copy Entry")
@@ -35,18 +39,15 @@ headline_texts, body_copy_texts, references_texts, cta_texts, cta_links = [], []
 for i in range(1, 5):
     st.subheader(f"Message #{i}")
 
-    # Collect and store each field's input data
+    # Collect and sanitize each field's input data
     headline = st_quill(f"Headline #{i}", html=True, placeholder="Enter formatted headline here...")
-    headline_text, _ = get_text_and_count(headline)
-    headline_texts.append(headline)
+    headline_texts.append(sanitize_html(headline))
 
     body_copy = st_quill(f"Body Copy #{i}", html=True, placeholder="Enter formatted body copy here...")
-    body_copy_text, _ = get_text_and_count(body_copy)
-    body_copy_texts.append(body_copy)
+    body_copy_texts.append(sanitize_html(body_copy))
 
     references = st_quill(f"References/Footnotes #{i}", html=True, placeholder="Enter formatted references here...")
-    references_text, _ = get_text_and_count(references)
-    references_texts.append(references)
+    references_texts.append(sanitize_html(references))
 
     cta = st.text_input(f"CTA #{i}", max_chars=20)
     cta_texts.append(cta)
@@ -64,18 +65,15 @@ subject_texts, email_body_texts, email_references_texts, email_cta_texts, email_
 for i in range(1, 5):
     st.subheader(f"Email #{i}")
 
-    # Collect and store each field's input data
+    # Collect and sanitize each field's input data
     subject_line = st_quill(f"Email #{i} - Subject Line", html=True, placeholder="Enter formatted subject line here...")
-    subject_text, _ = get_text_and_count(subject_line)
-    subject_texts.append(subject_line)
+    subject_texts.append(sanitize_html(subject_line))
 
     email_body = st_quill(f"Email #{i} - Body Copy", html=True, placeholder="Enter formatted body copy here...")
-    email_body_text, _ = get_text_and_count(email_body)
-    email_body_texts.append(email_body)
+    email_body_texts.append(sanitize_html(email_body))
 
     email_references = st_quill(f"Email #{i} - References/Footnotes", html=True, placeholder="Enter formatted references here...")
-    email_references_text, _ = get_text_and_count(email_references)
-    email_references_texts.append(email_references)
+    email_references_texts.append(sanitize_html(email_references))
 
     email_cta = st.text_input(f"Email #{i} - CTA", max_chars=20)
     email_cta_texts.append(email_cta)
