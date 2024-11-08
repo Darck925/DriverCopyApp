@@ -8,7 +8,7 @@ from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, Paragraph, 
 from reportlab.lib.units import inch
 from reportlab.lib.styles import getSampleStyleSheet
 
-# function to get plain text and count characters from HTML
+# function to retain text formatting for quill content
 def get_text_and_count(html_content):
     soup = BeautifulSoup(html_content, "html.parser")
     text = soup.get_text()
@@ -38,15 +38,15 @@ for i in range(1, 5):
     # Collect and store each field's input data
     headline = st_quill(f"Headline #{i}", html=True, placeholder="Enter formatted headline here...")
     headline_text, _ = get_text_and_count(headline)
-    headline_texts.append(headline_text)
+    headline_texts.append(headline)
 
     body_copy = st_quill(f"Body Copy #{i}", html=True, placeholder="Enter formatted body copy here...")
     body_copy_text, _ = get_text_and_count(body_copy)
-    body_copy_texts.append(body_copy_text)
+    body_copy_texts.append(body_copy)
 
     references = st_quill(f"References/Footnotes #{i}", html=True, placeholder="Enter formatted references here...")
     references_text, _ = get_text_and_count(references)
-    references_texts.append(references_text)
+    references_texts.append(references)
 
     cta = st.text_input(f"CTA #{i}", max_chars=20)
     cta_texts.append(cta)
@@ -67,15 +67,15 @@ for i in range(1, 5):
     # Collect and store each field's input data
     subject_line = st_quill(f"Email #{i} - Subject Line", html=True, placeholder="Enter formatted subject line here...")
     subject_text, _ = get_text_and_count(subject_line)
-    subject_texts.append(subject_text)
+    subject_texts.append(subject_line)
 
     email_body = st_quill(f"Email #{i} - Body Copy", html=True, placeholder="Enter formatted body copy here...")
     email_body_text, _ = get_text_and_count(email_body)
-    email_body_texts.append(email_body_text)
+    email_body_texts.append(email_body)
 
     email_references = st_quill(f"Email #{i} - References/Footnotes", html=True, placeholder="Enter formatted references here...")
     email_references_text, _ = get_text_and_count(email_references)
-    email_references_texts.append(email_references_text)
+    email_references_texts.append(email_references)
 
     email_cta = st.text_input(f"Email #{i} - CTA", max_chars=20)
     email_cta_texts.append(email_cta)
@@ -98,15 +98,14 @@ if st.button("Generate PDF"):
     elements.append(Paragraph("Text Placements Job Code", styles["Heading2"]))
     elements.append(Paragraph(job_code_text, styles["BodyText"]))
 
-    # update headers to include line breaks for character counts
     text_table_data = [
         [
             "Message #",
-            Paragraph("Headline<br/>(80 chars max)", styles["BodyText"]),
-            Paragraph("Body Copy<br/>(100 chars max)", styles["BodyText"]),
-            Paragraph("References/Footnotes<br/>(86 chars max)", styles["BodyText"]),
-            Paragraph("CTA<br/>(20 chars max)", styles["BodyText"]),
-            "CTA Link"
+            Paragraph('<font color="whitesmoke"><b>Headline<br/>(80 chars max)</b></font>', styles["BodyText"]),
+            Paragraph('<font color="whitesmoke"><b>Body Copy<br/>(100 chars max)</b></font>', styles["BodyText"]),
+            Paragraph('<font color="whitesmoke"><b>References/Footnotes<br/>(86 chars max)</b></font>', styles["BodyText"]),
+            Paragraph('<font color="whitesmoke"><b>CTA<br/>(20 chars max)</b></font>', styles["BodyText"]),
+            Paragraph('<font color="whitesmoke"><b>CTA Link</b></font>', styles["BodyText"])
         ]
     ]
     for i in range(4):
@@ -142,11 +141,11 @@ if st.button("Generate PDF"):
     email_table_data = [
         [
             "Email #",
-            Paragraph("Subject Line<br/>(65 chars max)", styles["BodyText"]),
-            Paragraph("Body Copy<br/>(350 chars max)", styles["BodyText"]),
-            Paragraph("References/Footnotes<br/>(86 chars max)", styles["BodyText"]),
-            Paragraph("CTA<br/>(20 chars max)", styles["BodyText"]),
-            "CTA Link"
+            Paragraph('<font color="whitesmoke"><b>Subject Line<br/>(65 chars max)</b></font>', styles["BodyText"]),
+            Paragraph('<font color="whitesmoke"><b>Body Copy<br/>(350 chars max)</b></font>', styles["BodyText"]),
+            Paragraph('<font color="whitesmoke"><b>References/Footnotes<br/>(86 chars max)</b></font>', styles["BodyText"]),
+            Paragraph('<font color="whitesmoke"><b>CTA<br/>(20 chars max)</b></font>', styles["BodyText"]),
+            Paragraph('<font color="whitesmoke"><b>CTA Link</b></font>', styles["BodyText"])
         ]
     ]
     for i in range(4):
@@ -181,4 +180,3 @@ if st.button("Generate PDF"):
         b64 = base64.b64encode(pdf_data).decode()
         href = f'<a href="data:application/octet-stream;base64,{b64}" download="Promo_Driver_Script.pdf">Download PDF</a>'
     st.markdown(href, unsafe_allow_html=True)
-
