@@ -86,10 +86,10 @@ for i in range(1, 5):
     email_references = st_quill(f"Email #{i} - References/Footnotes", html=True, placeholder="Enter formatted references here...")
     email_references_texts.append(sanitize_html(email_references))
 
-    email_cta = st.text_input(f"Email #{i}", max_chars=20)
+    email_cta = st.text_input(f"Email #{i} - CTA", max_chars=20, key=f"email_cta_{i}")
     email_cta_texts.append(email_cta)
 
-    email_cta_link = st.text_input(f"CTA Link", value="https://")
+    email_cta_link = st.text_input(f"CTA Link", value="https://", key=f"email_cta_link_{i}")
     email_cta_links.append(email_cta_link)
 
 # generate pdf with landscape orientation, page break, and updated styling
