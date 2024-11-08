@@ -181,3 +181,4 @@ if st.button("Generate PDF"):
         b64 = base64.b64encode(pdf_data).decode()
         href = f'<a href="data:application/octet-stream;base64,{b64}" download="Promo_Driver_Script.pdf">Download PDF</a>'
     st.markdown(href, unsafe_allow_html=True)
+
