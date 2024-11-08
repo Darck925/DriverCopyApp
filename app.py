@@ -84,23 +84,23 @@ for i in range(1, 5):
     email_cta_link = st.text_input(f"CTA Link #{i}", value="https://", key=f"email_cta_link_{i}")
     email_cta_links.append(email_cta_link)
 
-# generate pdf with selective bold and black font color applied directly
+# generate pdf with forced non-bold and black font color
 if st.button("Generate PDF"):
     pdf = SimpleDocTemplate("Promo_Driver_Script.pdf", pagesize=landscape(letter))
     elements = []
     styles = getSampleStyleSheet()
 
-    # custom style for regular body text (not bold)
-    body_text_style = styles["BodyText"]
-    body_text_style.fontName = "Helvetica"
+    # enforce non-bold font across all body text
+    body_text_style = styles["BodyText"].clone('body_text_style')
+    body_text_style.fontName = "Helvetica"  # set explicitly to non-bold Helvetica
     body_text_style.fontSize = 10
     body_text_style.textColor = colors.black
 
-    # create a separate style for bold text only where explicitly required
-    bold_text_style = styles["BodyText"]
-    bold_text_style.fontName = "Helvetica-Bold"
-    bold_text_style.fontSize = 10
-    bold_text_style.textColor = colors.black
+    # force a non-bold header style
+    non_bold_header_style = styles["BodyText"].clone('non_bold_header_style')
+    non_bold_header_style.fontName = "Helvetica"
+    non_bold_header_style.fontSize = 10
+    non_bold_header_style.textColor = colors.whitesmoke
 
     # program details section
     program_details = f"SF#: {sf_number}<br/>Pharma: {pharma}<br/>Brand: {brand}<br/>Product: {product}<br/>Product Abbreviation: {product_abbr}<br/>Program URL: {program_url}"
@@ -114,11 +114,11 @@ if st.button("Generate PDF"):
     text_table_data = [
         [
             "Message #",
-            Paragraph('<font color="whitesmoke">Headline<br/>(80 chars max)</font>', bold_text_style),
-            Paragraph('<font color="whitesmoke">Body Copy<br/>(100 chars max)</font>', bold_text_style),
-            Paragraph('<font color="whitesmoke">References/Footnotes<br/>(86 chars max)</font>', bold_text_style),
-            Paragraph('<font color="whitesmoke">CTA<br/>(20 chars max)</font>', bold_text_style),
-            Paragraph('<font color="whitesmoke">CTA Link</font>', bold_text_style)
+            Paragraph('<font color="whitesmoke">Headline<br/>(80 chars max)</font>', non_bold_header_style),
+            Paragraph('<font color="whitesmoke">Body Copy<br/>(100 chars max)</font>', non_bold_header_style),
+            Paragraph('<font color="whitesmoke">References/Footnotes<br/>(86 chars max)</font>', non_bold_header_style),
+            Paragraph('<font color="whitesmoke">CTA<br/>(20 chars max)</font>', non_bold_header_style),
+            Paragraph('<font color="whitesmoke">CTA Link</font>', non_bold_header_style)
         ]
     ]
     for i in range(4):
@@ -136,7 +136,7 @@ if st.button("Generate PDF"):
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),  # explicitly set header row to non-bold Helvetica
         ('FONTSIZE', (0, 0), (-1, 0), 10),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.white),
@@ -154,11 +154,11 @@ if st.button("Generate PDF"):
     email_table_data = [
         [
             "Email #",
-            Paragraph('<font color="whitesmoke">Subject Line<br/>(65 chars max)</font>', bold_text_style),
-            Paragraph('<font color="whitesmoke">Body Copy<br/>(350 chars max)</font>', bold_text_style),
-            Paragraph('<font color="whitesmoke">References/Footnotes<br/>(86 chars max)</font>', bold_text_style),
-            Paragraph('<font color="whitesmoke">CTA<br/>(20 chars max)</font>', bold_text_style),
-            Paragraph('<font color="whitesmoke">CTA Link</font>', bold_text_style)
+            Paragraph('<font color="whitesmoke">Subject Line<br/>(65 chars max)</font>', non_bold_header_style),
+            Paragraph('<font color="whitesmoke">Body Copy<br/>(350 chars max)</font>', non_bold_header_style),
+            Paragraph('<font color="whitesmoke">References/Footnotes<br/>(86 chars max)</font>', non_bold_header_style),
+            Paragraph('<font color="whitesmoke">CTA<br/>(20 chars max)</font>', non_bold_header_style),
+            Paragraph('<font color="whitesmoke">CTA Link</font>', non_bold_header_style)
         ]
     ]
     for i in range(4):
@@ -176,7 +176,7 @@ if st.button("Generate PDF"):
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica'),  # explicitly set header row to non-bold Helvetica
         ('FONTSIZE', (0, 0), (-1, 0), 10),
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
         ('BACKGROUND', (0, 1), (-1, -1), colors.white),
@@ -193,5 +193,6 @@ if st.button("Generate PDF"):
         b64 = base64.b64encode(pdf_data).decode()
         href = f'<a href="data:application/octet-stream;base64,{b64}" download="Promo_Driver_Script.pdf">Download PDF</a>'
     st.markdown(href, unsafe_allow_html=True)
+
 
 
